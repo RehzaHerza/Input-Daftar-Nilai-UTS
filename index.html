@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aplikasi Daftar Nilai UTS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="card"><h1>Daftar Nilai UTS</h1><div class="muted">Isi langsung di lembar kanan. Data tersimpan otomatis di peramban ini.</div></div>
+    <div class="card">
+      <h2>Siswa</h2>
+      <div class="row"><select id="tNew" title="Template"><option value="X">Kelas X</option><option value="XI">Kelas XI</option></select><input id="kNew" placeholder="Kelas, mis. X RPL"></div>
+      <div class="row" style="margin-top:8px"><button class="p" id="add">+ Tambah siswa</button></div>
+      <details><summary>Tempel banyak nama</summary>
+        <textarea id="bulk" rows="5" style="width:100%" placeholder="Satu nama per baris"></textarea>
+        <button id="bulkAdd" style="width:100%">Tambahkan semua</button></details>
+      <details><summary>Impor dari Excel / CSV</summary>
+        <div class="muted">Kolom nama diberi judul "Nama" (judul "Kelas" bersifat opsional). Tanpa judul, kolom teks pertama dipakai sebagai nama. Format: .xlsx atau .csv.</div>
+        <button id="impBtn" style="width:100%">Pilih berkas</button>
+        <input type="file" id="impF" accept=".xlsx,.csv,.txt" hidden>
+        <div class="stat" id="impStat"></div></details>
+      <div class="list" id="list"></div>
+      <button id="clean" style="width:100%;margin-top:8px">Hapus semua siswa yang kosong</button>
+    </div>
+    <div class="card">
+      <h2>Unduh</h2>
+      <div class="row" style="margin-bottom:8px"><select id="scope"><option value="all">Semua siswa</option><option value="one">Siswa terpilih saja</option><option value="zip">Satu file per siswa (ZIP)</option></select></div>
+      <div class="row"><button class="p" data-ex="xlsx">Excel</button><button class="p" data-ex="docx">Word</button><button class="p" data-ex="pdf">PDF</button></div>
+      <div class="stat" id="stat"></div>
+    </div>
+    <div class="card"><h2>Cadangan data</h2>
+      <div class="row"><button id="bk">Cadangkan</button><button id="rs">Pulihkan</button></div>
+      <input type="file" id="rsf" accept=".json,application/json" hidden>
+      <div class="stat" id="bkStat"></div></div>
+    <div class="card"><details><summary>Pengaturan lembar</summary>
+      <label class="f">Semester<input data-s="semester"></label>
+      <label class="f">Tahun pelajaran (TP)<input data-s="tp"></label>
+      <label class="f">Tempat, bulan tahun<input data-s="tempat"></label>
+      <label class="f">Nama sekolah<input data-s="sekolah"></label>
+      <label class="f">Kepala sekolah<input data-s="kepsek"></label>
+      <label class="f">NIP kepala sekolah<input data-s="nipKepsek"></label>
+      <label class="f">Wali kelas<input data-s="wali"></label>
+      <label class="f">NIP wali kelas<input data-s="nipWali"></label>
+    </details></div>
+  </aside>
+  <main class="main">
+    <div class="tabs"><button data-v="siswa" class="on">Lembar Siswa</button><button data-v="mapel">Input per Mapel</button><button data-v="rekap">Rekap Kelas</button></div>
+    <div id="vSiswa">
+    <div class="bar">
+      <button id="prev">‹ Sebelumnya</button><button id="next">Berikutnya ›</button>
+      <span class="muted" id="pos"></span><span class="sp"></span>
+      <label class="muted">Template <select id="tCur"><option value="X">Kelas X (12 mapel)</option><option value="XI">Kelas XI (11 mapel)</option></select></label>
+    </div>
+    <div class="scroll"><div class="paper" id="paper"></div></div>
+    <p class="muted">Tekan Enter di kolom nilai untuk pindah ke mata pelajaran berikutnya; setelah nilai terakhir, Enter membuka siswa baru. KKTP diisi sekali dan dipakai semua siswa pada tingkat yang sama.</p>
+  </div>
+    <div id="vMapel" hidden>
+      <div class="bar">
+        <label class="muted">Tingkat <select id="mT"><option value="X">Kelas X</option><option value="XI">Kelas XI</option></select></label>
+        <label class="muted">Kelas <select id="mK"></select></label>
+      </div>
+      <div class="bar"><button id="mPrev">‹ Mapel</button><select id="mM" style="flex:1;min-width:220px"></select><button id="mNext">Mapel ›</button></div>
+      <div class="bar"><label class="muted">KKTP mapel ini <input id="mKktp" inputmode="decimal" style="width:90px"></label><span class="muted" id="mProg"></span></div>
+      <div class="scroll"><div class="card"><div id="mTable"></div></div></div>
+      <details class="card" style="margin-top:10px"><summary>Atur KKTP semua mapel (sekali isi)</summary><div id="mKK"></div></details>
+      <p class="muted">Pilih satu mata pelajaran, isi KKTP-nya, lalu input nilai seluruh siswa dari atas ke bawah (Enter pindah ke siswa berikutnya). Keterangan TUNTAS / TIDAK TUNTAS terisi otomatis: TUNTAS bila nilai sama dengan atau di atas KKTP. KKTP berlaku untuk semua siswa pada tingkat yang sama.</p>
+    </div>
+    <div id="vRekap" hidden>
+      <div class="bar">
+        <label class="muted">Tingkat <select id="rT"><option value="X">Kelas X</option><option value="XI">Kelas XI</option></select></label>
+        <label class="muted">Kelas <select id="rK"></select></label>
+        <label class="muted"><input type="checkbox" id="rKet" checked> Keterangan otomatis</label>
+        <span class="sp"></span><button class="p" data-rx="xlsx">Excel</button><button class="p" data-rx="docx">Word</button><button class="p" data-rx="pdf">PDF</button>
+      </div>
+      <div class="stat" id="rStat"></div>
+      <div class="scroll"><div class="paper wide rk" id="rTable"></div></div>
+      <p class="muted">Rekap adalah template terpisah dari lembar siswa: satu tabel berisi semua siswa dalam satu kelas. Nilai di bawah KKTP berwarna merah. Keterangan: Tuntas bila semua nilai terisi dan tidak ada di bawah KKTP; Belum tuntas bila ada nilai di bawah KKTP; Belum lengkap bila ada nilai kosong. Unduhan rekap berformat landscape.</p>
+    </div>
+  </main>
+</div>
+<script src="libs/jszip.min.js"></script>
+<script src="libs/exceljs.min.js"></script>
+<script src="libs/docx.umd.js"></script>
+<script src="libs/jspdf.umd.min.js"></script>
+<script src="libs/jspdf.plugin.autotable.min.js"></script>
+<script src="export.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
