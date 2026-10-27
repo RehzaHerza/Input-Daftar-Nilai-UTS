@@ -6,7 +6,7 @@ Aplikasi ini untuk apa? Mengisi Daftar Nilai Ujian Tengah Semester (UTS) siswa K
 
 1. Sebelum mulai
 Gunakan Google Chrome atau Microsoft Edge di laptop/komputer. Di HP juga bisa, tetapi layar laptop lebih nyaman.
-Alamat web: https://rehzaherza.github.io/Aplikasi-Daftar-Nilai-UTS/
+Alamat web: https://rehzaherza.github.io/Input-Daftar-Nilai-UTS/
 Data yang Bapak/Ibu isi tersimpan otomatis di laptop/HP yang sedang dipakai, bukan di internet. Karena itu:
 Selalu pakai laptop/HP dan peramban yang sama sampai selesai.
 Jangan menghapus "data penjelajahan" atau "cookies" di Chrome.
